@@ -140,3 +140,8 @@ input/
 # Idea
 .idea/
 
+# sentence lists
+*list_sentence*
+
+# models
+*.h5
