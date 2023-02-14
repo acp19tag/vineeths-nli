@@ -4,7 +4,7 @@ from tensorflow.keras.models import load_model
 from deep_model.SumEmbeddings.preprocess import preprocess_testdata
 from deep_model.SumEmbeddings.parameters import *
 
-"""
+
 # Uncomment for generating plots. Requires some libraries (see below)
 import seaborn as sns
 import pandas as pd
@@ -14,7 +14,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
 from utils.plot_confusion_matrix import plot_confusion_matrix
 from tensorflow.keras.utils import plot_model
-"""
+
 
 
 # Tests the SumEmbedding model using the data passed as argument
@@ -59,7 +59,7 @@ def SE_model_test(data):
     output_file.close()
     output_file_root.close()
 
-    """
+    
     # Uncomment for generating plots.
     confusion_mtx = confusion_matrix(Y_test, Y_pred)
     plot_confusion_matrix(confusion_mtx, "SumEmbeddings", classes=range(3))
@@ -72,4 +72,4 @@ def SE_model_test(data):
     plt.savefig('./results/SumEmbeddings/classification_report.png')
     # plt.show()
     plot_model(model, to_file='./results/SumEmbeddings/model_plot.png', show_shapes=True, show_layer_names=True)
-    """
+    

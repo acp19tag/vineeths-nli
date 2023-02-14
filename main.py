@@ -19,8 +19,8 @@ from deep_model.BERT.model_test import BERT_model_test
 """
 # To be run once to generate cleaned and tokenized sentences stored as pickle files.
 # Takes a significant amount of time to execute
-generate_meta_input()
 """
+# generate_meta_input() 
 
 # Reads the data from from pickle files
 data = read_data()

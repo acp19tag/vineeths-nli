@@ -6,7 +6,7 @@ from deep_model.BERT.bert_input import get_inputs
 from deep_model.BERT.preprocess import preprocess
 from deep_model.BERT.parameters import *
 
-"""
+
 # Uncomment for generating plots. Requires some libraries (see below)
 import seaborn as sns
 import pandas as pd
@@ -16,7 +16,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
 from utils.plot_confusion_matrix import plot_confusion_matrix
 from tensorflow.keras.utils import plot_model
-"""
+
 
 
 # Tests the BERT model using the data passed as argument
@@ -57,7 +57,7 @@ def BERT_model_test(data):
 
     output_file.close()
 
-    """
+    
     # Uncomment for generating plots.
     confusion_mtx = confusion_matrix(Y_test, Y_pred)
     plot_confusion_matrix(confusion_mtx, "BERT", classes=range(3))
@@ -70,4 +70,4 @@ def BERT_model_test(data):
     plt.savefig('./results/BERT/classification_report.png')
     # plt.show()
     plot_model(model, to_file='./results/BERT/model_plot.png', show_shapes=True, show_layer_names=True)
-    """
+    
