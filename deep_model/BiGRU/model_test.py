@@ -54,12 +54,12 @@ def BG_model_test(data):
 
     output_file.close()
 
-    
+
     # Uncomment for generating plots.
     confusion_mtx = confusion_matrix(Y_test, Y_pred)
     plot_confusion_matrix(confusion_mtx, "BiGRU", classes=range(3))
 
-    target_names = ["Class {}".format(i) for i in range(CATEGORIES)]
+    target_names = [f"Class {i}" for i in range(CATEGORIES)]
     classification_rep = classification_report(Y_test, Y_pred, target_names=target_names, output_dict=True)
 
     plt.figure()

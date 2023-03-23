@@ -34,6 +34,13 @@ def convert_data(data):
             labels[ind] = 1
         elif item == "entailment":
             labels[ind] = 2
+            
+        # TG ADDITION
+        elif item in ['0', 0]:
+            labels[ind] = 0
+        elif item in ['1', 1]:
+            labels[ind] = 1
+            
         else:
             labels[ind] = 99
             del_list.append(ind)
