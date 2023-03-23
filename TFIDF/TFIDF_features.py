@@ -15,6 +15,10 @@ def TFIDF_features(data, mode):
     corpus_sentence1 = [' '.join(item) for item in list_sentence1]
     corpus_sentence2 = [' '.join(item) for item in list_sentence2]
     num_samples = len(list_gold_label)
+    
+    # print(f'num_samples = {num_samples}') # DEBUG
+    # print(f'len(corpus_sentence1) = {len(corpus_sentence1)}')
+    # print(f'len(corpus_sentence2) = {len(corpus_sentence2)}')
 
     # Create a composite corpus over which to train the TFIDF Vectorizer
     # Corresponding lines of sentence1 and sentence2 are merged together
@@ -25,12 +29,22 @@ def TFIDF_features(data, mode):
     del_list =[]
     tfidf_labels = [None] * num_samples
     for ind, item in enumerate(list_gold_label):
+        
+        # print(f'ind = {ind}, item = {item}') # DEBUG
+        
         if item == "contradiction":
             tfidf_labels[ind] = 0
         elif item == "neutral":
             tfidf_labels[ind] = 1
         elif item == "entailment":
             tfidf_labels[ind] = 2
+
+        # TG INCLUDE
+        elif item == '0' or item == 0:
+            tfidf_labels[ind] = 0
+        elif item == '1' or item == 1:
+            tfidf_labels[ind] = 1
+
         else:
             tfidf_labels[ind] = 99
             del_list.append(ind)
