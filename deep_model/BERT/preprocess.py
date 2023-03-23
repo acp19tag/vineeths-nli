@@ -1,5 +1,11 @@
 import numpy as np
 
+import nltk
+
+nltk.download('stopwords')
+
+from nltk.corpus import stopwords
+
 
 # Process the data and return the data in required format
 def preprocess(data):
@@ -8,9 +14,20 @@ def preprocess(data):
     list_sentence2 = data[1][0]
     list_gold_label = data[2][0]
 
+    stop_words = set(stopwords.words('english'))
+
     # Merge each sublist (tokens list of each sentence) to a string
-    corpus_sentence1 = [' '.join(item) for item in list_sentence1]
-    corpus_sentence2 = [' '.join(item) for item in list_sentence2]
+    # TG ADDITION - DROP STOP-WORDS
+    # corpus_sentence1 = [' '.join(item) for item in list_sentence1] # ORIGINAL
+    # corpus_sentence2 = [' '.join(item) for item in list_sentence2] # ORIGINAL
+    corpus_sentence1 = [
+        ' '.join([token for token in item if token.lower() not in stop_words])
+        for item in list_sentence1
+    ]
+    corpus_sentence2 = [
+        ' '.join([token for token in item if token.lower() not in stop_words]) 
+        for item in list_sentence2 
+    ]
     num_samples = len(list_gold_label)
 
     # There are entries in dataset without any gold_label (with gold_label entry as "-")
@@ -24,6 +41,13 @@ def preprocess(data):
             labels[ind] = 1
         elif item == "entailment":
             labels[ind] = 2
+
+        # TG ADDITION
+        elif item in ['0', 0]:
+            labels[ind] = 0
+        elif item in ['1', 1]:
+            labels[ind] = 1
+
         else:
             labels[ind] = 99
             del_list.append(ind)

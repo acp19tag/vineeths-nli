@@ -20,7 +20,7 @@ def BERT_model_train(data):
     bert_tokenizer_transformer = BertTokenizer.from_pretrained('bert-base-cased', do_lower_case=True)
 
     # Convert input data into BERT acceptable format
-    X_train = get_inputs(input=train_data, tokenizer=bert_tokenizer_transformer, maxlen=100)
+    X_train = get_inputs(input=train_data, tokenizer=bert_tokenizer_transformer, maxlen=MAX_SEQUENCE_LENGTH)
     Y_train = train_data[2]
 
     # Define input layers
@@ -36,8 +36,8 @@ def BERT_model_train(data):
         weights._trainable = False
 
     # Define output classification layer with BERT output
-    bert_output, _ = bert_model([token_inputs, mask_inputs, seg_inputs])
-    bert_output_pool = GlobalAveragePooling1D()(bert_output)
+    bert_output = bert_model([token_inputs, mask_inputs, seg_inputs]) # changed two outputs to one
+    bert_output_pool = GlobalAveragePooling1D()(bert_output['last_hidden_state']) # changed bert_output to bert_output['last_hidden_state'] 
     bert_output_pool = Dense(DENSE_UNITS, activation='relu')(bert_output_pool)
 
     output = Dense(CATEGORIES, activation='sigmoid', name='output')(bert_output_pool)
@@ -48,7 +48,11 @@ def BERT_model_train(data):
 
     # Define the optimizer and compile the model
     optimizer = Adam(learning_rate=LEARNING_RATE)
-    bert_model_new.compile(optimizer=optimizer, loss='sparse_categorical_crossentropy')
+    
+    if CATEGORIES > 2:
+        bert_model_new.compile(optimizer=optimizer, loss='sparse_categorical_crossentropy')
+    else:
+        bert_model_new.compile(optimizer=optimizer, loss='binary_crossentropy')
 
     # Fit the training data to our model
     history = bert_model_new.fit(x=X_train,

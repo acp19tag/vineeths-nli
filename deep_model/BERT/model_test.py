@@ -30,33 +30,28 @@ def BERT_model_test(data):
     X_test = get_inputs(input=test_data, tokenizer=bert_tokenizer_transformer, maxlen=100)
     Y_test = test_data[2]
 
-    # Open the file to which output has to be written
-    output_file = open('./results/BERT/BERT.txt', 'w')
+    with open('./results/BERT/BERT.txt', 'w') as output_file:
+        # Check if model exists at 'model' directory
+        # try:
+        #     bert_model = load_model('./model/BERT/')
+        # except:
+        #     print("Trained model does not exist. Please train the model.\n")
+        #     exit(0)
+        bert_model = load_model('./model/BERT/')
 
-    # Check if model exists at 'model' directory
-    try:
-        bert_model = load_model('./model/BERT')
-    except:
-        print("Trained model does not exist. Please train the model.\n")
-        exit(0)
 
-    # Obtain the predicted classes
-    Y_pred = bert_model.predict(X_test)
-    Y_pred = np.argmax(Y_pred, axis=1)
+        # Obtain the predicted classes
+        Y_pred = bert_model.predict(X_test)
+        Y_pred = np.argmax(Y_pred, axis=1)
 
-    # Write output to file
-    for ind in range(Y_pred.shape[0]):
-        if Y_pred[ind] == 0:
-            output_file.write("contradiction\n")
-        elif Y_pred[ind] == 1:
-            output_file.write("neutral\n")
-        elif Y_pred[ind] == 2:
-            output_file.write("entailment\n")
-        else:
-            pass
-
-    output_file.close()
-
+        # Write output to file
+        for ind in range(Y_pred.shape[0]):
+            if Y_pred[ind] == 0:
+                output_file.write("contradiction\n")
+            elif Y_pred[ind] == 1:
+                output_file.write("neutral\n")
+            elif Y_pred[ind] == 2:
+                output_file.write("entailment\n")
     
     # Uncomment for generating plots.
     confusion_mtx = confusion_matrix(Y_test, Y_pred)
