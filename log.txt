@@ -1,0 +1,19 @@
+Process started at 2023-03-17 14:38:12
+Training BiGRU. Process started at 2023-03-17 14:38:12
+BiGRU Trained and Evaluated. Process ended at 2023-03-17 14:45:24
+
+Training SumEmbeddings. Process started at 2023-03-17 14:45:24
+SumEmbeddings Trained and Evaluated. Process ended at 2023-03-17 14:52:26
+
+Training AvgEmbeddings. Process started at 2023-03-17 14:52:26
+AvgEmbeddings Trained and Evaluated. Process ended at 2023-03-17 14:59:17
+
+Training BiLSTM. Process started at 2023-03-17 14:59:17
+BiLSTM Trained and Evaluated. Process ended at 2023-03-17 15:07:31
+
+Training BERT. Process started at 2023-03-17 15:08:09
+BERT Trained and Evaluated. Process ended at 2023-03-17 15:37:50
+
+Complete! Process ended at 2023-03-17 15:37:50
+
+Total time taken: 00:59:38

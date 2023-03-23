@@ -1,0 +1,5 @@
+Training started at 2023-03-17 14:59:17
+Evaluation started at 2023-03-17 15:05:21
+Training and Evaluation Complete. Process ended at 2023-03-17 15:07:31
+
+Total time taken: 00:08:14
