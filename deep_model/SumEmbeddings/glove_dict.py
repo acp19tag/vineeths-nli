@@ -12,7 +12,7 @@ def glove_dict():
     embedding_dict = {}
 
     # Open the GloVe embedding file
-    file = open(GLOVE_DIR)
+    file = open(file = GLOVE_DIR, encoding = 'utf8', mode = 'r')
 
     for line in file:
         # Spilt the word and its embedding vector
