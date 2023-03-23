@@ -34,6 +34,13 @@ def convert_data(data):
             labels[ind] = 1
         elif item == "entailment":
             labels[ind] = 2
+            
+        # TG ADDITION
+        elif item in ['0', 0]:
+            labels[ind] = 0
+        elif item in ['1', 1]:
+            labels[ind] = 1
+            
         else:
             labels[ind] = 99
             del_list.append(ind)
@@ -55,6 +62,9 @@ def convert_data(data):
     print(f"Neutral: {np.sum(labels == 1)}")
     print(f"Entailment: {np.sum(labels == 2)}")
     """
+    # print(f'Count Rejected: {len(np.sum(labels == 0))}')
+    # print(f'Count Hired: {len(np.sum(labels == 1))}')
+    # print(f'Count Other: {len(np.sum(labels not in {0, 1}))}')
 
     return data_converted, corpus
 

@@ -1,7 +1,7 @@
 # Imports
 import tempfile
 from tensorflow.keras.models import Model
-from tensorflow.keras.optimizers import RMSprop
+from tensorflow.keras.optimizers.legacy import RMSprop
 from tensorflow.keras.regularizers import l2
 from tensorflow.keras.layers import Input, Embedding, Dense, Dropout, TimeDistributed
 from tensorflow.keras.layers import BatchNormalization, Bidirectional, LSTM, concatenate
