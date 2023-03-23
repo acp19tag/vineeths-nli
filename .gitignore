@@ -145,3 +145,10 @@ input/
 
 # models
 *.h5
+deep_model.txt
+tfidf.txt
+results/AvgEmbeddings/AvgEmbeddings.txt
+results/BERT/BERT.txt
+results/BiGRU/BiGRU.txt
+results/BiLSTM/BiLSTM.txt
+results/SumEmbeddings/SumEmbeddings.txt
