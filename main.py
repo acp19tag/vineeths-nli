@@ -4,11 +4,13 @@ os.environ["TF_CPP_MIN_LOG_LEVEL"] = '3'
 
 import argparse
 from utils.read_data import read_data
-from utils.generate_meta_input import generate_meta_input
+# from utils.generate_meta_input import generate_meta_input
 from TFIDF.logistic_regression_train import logistic_regression_train
 from TFIDF.logistic_regression_test import logistic_regression_test
 from deep_model.SumEmbeddings.model_train import SE_model_train
 from deep_model.SumEmbeddings.model_test import SE_model_test
+from deep_model.AvgEmbeddings.model_train import AE_model_train
+from deep_model.AvgEmbeddings.model_test import AE_model_test
 from deep_model.BiLSTM.model_train import BL_model_train
 from deep_model.BiLSTM.model_test import BL_model_test
 from deep_model.BiGRU.model_train import BG_model_train
@@ -30,7 +32,7 @@ test_data = data[3:]
 # Command line argument parser. Defaults to testing the SumEmbeddings model.
 arg_parser = argparse.ArgumentParser(description="Choose between training the model or testing the model. "
                                                  "Choose the model architecture between SumEmbeddings, "
-                                                 "BiLSTM, BiGRU and BERT")
+                                                 "AvgEmbeddings, BiLSTM, BiGRU and BERT")
 
 arg_parser.add_argument("--train-model", action="store_true", default=False)
 arg_parser.add_argument("--model-name", type=str, default="SumEmbeddings")
@@ -45,6 +47,8 @@ if argObj.train_model:
     model_name = argObj.model_name
     if model_name == "SumEmbeddings":
         SE_model_train(train_data)
+    elif model_name == "AvgEmbeddings":
+        AE_model_train(train_data)
     elif model_name == "BiGRU":
         BG_model_train(train_data)
     elif model_name == "BiLSTM":
@@ -60,6 +64,8 @@ else:
     model_name = argObj.model_name
     if model_name == "SumEmbeddings":
         SE_model_test(test_data)
+    elif model_name == "AvgEmbeddings":
+        AE_model_test(test_data)
     elif model_name == "BiGRU":
         BG_model_test(test_data)
     elif model_name == "BiLSTM":
