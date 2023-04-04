@@ -12,7 +12,24 @@ from utils.plot import plot
 
 
 # Trains the BiLSTM model using the data passed as argument
-def BG_model_train(data):
+def BG_model_train(data, wandb):
+    
+    # overwrite parameters with wandb
+    EMBED_HIDDEN_SIZE =  wandb.config.embedding_size
+    MAX_SEQ_LEN = wandb.config.seq_length
+    ACTIVATION = wandb.config.activation
+    DROPOUT = wandb.config.dropout
+    LEARNING_RATE = wandb.config.learning_rate
+    RHO = wandb.config.rho
+    EPSILON = wandb.config.epsilon
+    DECAY = wandb.config.decay
+    BATCH_SIZE = wandb.config.batch_size
+    TRAINING_EPOCHS = wandb.config.num_epochs
+    VALIDATION_SPLIT = wandb.config.validation_split
+    L2 = wandb.config.l2
+    GRU_UNITS = wandb.config.gru_units
+    
+    
     # Preprocess the data and obtain the embedding weight matrix
     train_data, embed_matrix = preprocess_traindata(data)
 
@@ -109,6 +126,13 @@ def BG_model_train(data):
                         epochs=TRAINING_EPOCHS,
                         validation_split=VALIDATION_SPLIT,
                         callbacks=callbacks)
+
+    # log to wandb
+    for metric_tuple in zip(history.history['loss'], history.history['accuracy'], history.history['val_loss'], history.history['val_accuracy']):
+        
+        train_loss, train_acc, val_loss, val_acc = metric_tuple
+        wandb.log({"train_loss": train_loss, "train_acc": train_acc, "dev_loss": val_loss, "dev_acc": val_acc})
+
 
     # Restore the best found model during validation
     model.load_weights(tmpfn)

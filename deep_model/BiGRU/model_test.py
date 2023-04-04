@@ -18,42 +18,38 @@ from tensorflow.keras.utils import plot_model
 
 
 # Tests the BiLSTM model using the data passed as argument
-def BG_model_test(data):
+def BG_model_test(data, wandb):
+    # overwrite the parameters
+    BATCH_SIZE = wandb.config.batch_size
+
     # Preprocess the data
     test_data = preprocess_testdata(data)
 
-    # Open the file to which output has to be written
-    output_file = open('./results/BiGRU/BiGRU.txt', 'w')
+    with open('./results/BiGRU/BiGRU.txt', 'w') as output_file:
+        # Check if model exists at 'model' directory
+        try:
+            model = load_model('./model/BiGRU.h5')
+        except:
+            print("Trained model does not exist. Please train the model.\n")
+            exit(0)
 
-    # Check if model exists at 'model' directory
-    try:
-        model = load_model('./model/BiGRU.h5')
-    except:
-        print("Trained model does not exist. Please train the model.\n")
-        exit(0)
+        # Evaluate the loaded model with test data
+        loss, accuracy = model.evaluate(x=[test_data[0], test_data[1]], y=test_data[2], batch_size=BATCH_SIZE)
+        print("Test Loss: {:.2f}, Test Accuracy: {:.2f}%\n".format(loss, (accuracy*100)))
 
-    # Evaluate the loaded model with test data
-    loss, accuracy = model.evaluate(x=[test_data[0], test_data[1]], y=test_data[2], batch_size=BATCH_SIZE)
-    print("Test Loss: {:.2f}, Test Accuracy: {:.2f}%\n".format(loss, (accuracy*100)))
+        # Obtain the predicted classes
+        Y_pred = model.predict([test_data[0], test_data[1]])
+        Y_pred = np.argmax(Y_pred, axis=1)
+        Y_test = np.argmax(test_data[2], axis=1)
 
-    # Obtain the predicted classes
-    Y_pred = model.predict([test_data[0], test_data[1]])
-    Y_pred = np.argmax(Y_pred, axis=1)
-    Y_test = np.argmax(test_data[2], axis=1)
-
-    # Write output to file
-    for ind in range(Y_pred.shape[0]):
-        if Y_pred[ind] == 0:
-            output_file.write("contradiction\n")
-        elif Y_pred[ind] == 1:
-            output_file.write("neutral\n")
-        elif Y_pred[ind] == 2:
-            output_file.write("entailment\n")
-        else:
-            pass
-
-    output_file.close()
-
+        # Write output to file
+        for ind in range(Y_pred.shape[0]):
+            if Y_pred[ind] == 0:
+                output_file.write("contradiction\n")
+            elif Y_pred[ind] == 1:
+                output_file.write("neutral\n")
+            elif Y_pred[ind] == 2:
+                output_file.write("entailment\n")
 
     # Uncomment for generating plots.
     confusion_mtx = confusion_matrix(Y_test, Y_pred)
