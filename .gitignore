@@ -1,3 +1,6 @@
+# wandb
+wandb/
+
 # logs and prediction files
 *.txt
 
