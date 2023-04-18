@@ -23,7 +23,7 @@ printf "Training BiGRU. Process started at %s\n" "$(date +'%Y-%m-%d %H:%M:%S')" 
 
 printf "Training started at %s\n" "$(date +'%Y-%m-%d %H:%M:%S')" > results/BiGRU/log.txt
 
-python main.py --model-name BiGRU --data interviewed
+python main.py --model-name BiGRU --data interviewed --wandb
 
 end=`date +%s`
 printf "Training and Evaluation Complete. Process ended at %s\n\n" "$(date +'%Y-%m-%d %H:%M:%S')" >> results/BiGRU/log.txt
@@ -41,7 +41,7 @@ printf "Training SumEmbeddings. Process started at %s\n" "$(date +'%Y-%m-%d %H:%
 
 printf "Training started at %s\n" "$(date +'%Y-%m-%d %H:%M:%S')" > results/SumEmbeddings/log.txt
 
-python main.py --model-name SumEmbeddings --data interviewed
+python main.py --model-name SumEmbeddings --data interviewed --wandb
 
 end=`date +%s`
 printf "Training and Evaluation Complete. Process ended at %s\n\n" "$(date +'%Y-%m-%d %H:%M:%S')" >> results/SumEmbeddings/log.txt
@@ -59,7 +59,7 @@ printf "Training AvgEmbeddings. Process started at %s\n" "$(date +'%Y-%m-%d %H:%
 
 printf "Training started at %s\n" "$(date +'%Y-%m-%d %H:%M:%S')" > results/AvgEmbeddings/log.txt
 
-python main.py --model-name AvgEmbeddings --data interviewed
+python main.py --model-name AvgEmbeddings --data interviewed --wandb
 
 end=`date +%s`
 printf "Training and Evaluation Complete. Process ended at %s\n\n" "$(date +'%Y-%m-%d %H:%M:%S')" >> results/AvgEmbeddings/log.txt
@@ -77,7 +77,7 @@ printf "Training BiLSTM. Process started at %s\n" "$(date +'%Y-%m-%d %H:%M:%S')"
 
 printf "Training started at %s\n" "$(date +'%Y-%m-%d %H:%M:%S')" > results/BiLSTM/log.txt
 
-python main.py --model-name BiLSTM --data interviewed
+python main.py --model-name BiLSTM --data interviewed --wandb
 
 end=`date +%s`
 printf "Training and Evaluation Complete. Process ended at %s\n\n" "$(date +'%Y-%m-%d %H:%M:%S')" >> results/BiLSTM/log.txt
@@ -99,7 +99,7 @@ printf "Training BiGRU. Process started at %s\n" "$(date +'%Y-%m-%d %H:%M:%S')" 
 
 printf "Training started at %s\n" "$(date +'%Y-%m-%d %H:%M:%S')" > results/BiGRU/log.txt
 
-python main.py --model-name BiGRU --data hired
+python main.py --model-name BiGRU --data hired --wandb
 
 end=`date +%s`
 printf "Training and Evaluation Complete. Process ended at %s\n\n" "$(date +'%Y-%m-%d %H:%M:%S')" >> results/BiGRU/log.txt
@@ -117,7 +117,7 @@ printf "Training SumEmbeddings. Process started at %s\n" "$(date +'%Y-%m-%d %H:%
 
 printf "Training started at %s\n" "$(date +'%Y-%m-%d %H:%M:%S')" > results/SumEmbeddings/log.txt
 
-python main.py --model-name SumEmbeddings --data hired
+python main.py --model-name SumEmbeddings --data hired --wandb
 
 end=`date +%s`
 printf "Training and Evaluation Complete. Process ended at %s\n\n" "$(date +'%Y-%m-%d %H:%M:%S')" >> results/SumEmbeddings/log.txt
@@ -135,7 +135,7 @@ printf "Training AvgEmbeddings. Process started at %s\n" "$(date +'%Y-%m-%d %H:%
 
 printf "Training started at %s\n" "$(date +'%Y-%m-%d %H:%M:%S')" > results/AvgEmbeddings/log.txt
 
-python main.py --model-name AvgEmbeddings --data hired
+python main.py --model-name AvgEmbeddings --data hired --wandb
 
 end=`date +%s`
 printf "Training and Evaluation Complete. Process ended at %s\n\n" "$(date +'%Y-%m-%d %H:%M:%S')" >> results/AvgEmbeddings/log.txt
@@ -153,7 +153,7 @@ printf "Training BiLSTM. Process started at %s\n" "$(date +'%Y-%m-%d %H:%M:%S')"
 
 printf "Training started at %s\n" "$(date +'%Y-%m-%d %H:%M:%S')" > results/BiLSTM/log.txt
 
-python main.py --model-name BiLSTM --data hired
+python main.py --model-name BiLSTM --data hired --wandb
 
 end=`date +%s`
 printf "Training and Evaluation Complete. Process ended at %s\n\n" "$(date +'%Y-%m-%d %H:%M:%S')" >> results/BiLSTM/log.txt

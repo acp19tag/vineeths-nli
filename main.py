@@ -1,4 +1,5 @@
 # Imports
+# sourcery skip: dict-assign-update-to-union
 import os
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = '3'
 
@@ -33,6 +34,7 @@ arg_parser = argparse.ArgumentParser(description="Choose between training the mo
 
 arg_parser.add_argument("--model-name", type=str, default="SumEmbeddings")
 arg_parser.add_argument("--data", type = str, default='interviewed')
+arg_parser.add_argument('--wandb', action='store_true')
 
 argObj = arg_parser.parse_args()
 
@@ -45,85 +47,129 @@ data = read_data(data_dir)
 train_data = data[:3]
 test_data = data[3:]
 
-sweep_configuration = {
-    'method': 'bayes',
-    'name': 'vineeths-sweep',
-    'metric': {'goal': 'maximize', 'name': 'dev_acc'},
-    # 'early_terminate': {'type': 'hyperband', 'min_iter': 10},
-    'parameters':
-        {
-            'batch_size': {
-                'values': [128, 256, 512]
-                },
-            'seq_length': {
-                'values': [128, 256, 512]
-                },
-            'learning_rate': {
-                'values': [1e-4, 1e-5, 1e-6]
-                },
-            'dropout': {
-                'values': [0.0, 0.1, 0.2, 0.3, 0.4]
-                },
-            'num_epochs': {'value': 200},
-            'embedding_size': {'value': 300},
-            'vocab_size': {'value': 20000},
-            'architecture': {'value': f'{model_name}'},
-            'dataset': {'value': f"TribePad: {argObj.data}"}
-        }
-}
-# further sweep config
-if model_name in {"SumEmbeddings", "AvgEmbeddings", "BiGRU", "BiLSTM"}:
-    sweep_configuration |= {
-        'rho': {'value': 0.9},
-        'epsilon': {'value': 1e-08},
-        'decay': {'value': 0.0},
-        'validation_split': {'value': 0.02},
+if argObj.wandb:
+    sweep_configuration = {
+        'method': 'bayes',
+        'name': 'vineeths-sweep',
+        'metric': {'goal': 'maximize', 'name': 'dev_acc'},
+        # 'early_terminate': {'type': 'hyperband', 'min_iter': 10},
+        'parameters':
+            {
+                'batch_size': {
+                    'values': [128, 256, 512]
+                    },
+                'seq_length': {
+                    'values': [128, 256, 512]
+                    },
+                'learning_rate': {
+                    'values': [1e-4, 1e-5, 1e-6]
+                    },
+                'dropout': {
+                    'values': [0.0, 0.1, 0.2, 0.3, 0.4]
+                    },
+                'num_epochs': {'value': 200},
+                'embedding_size': {'value': 300},
+                'vocab_size': {'value': 20000},
+                'architecture': {'value': f'{model_name}'},
+                'dataset': {'value': f"TribePad: {argObj.data}"}
+            }
     }
-if model_name in {"BiGRU", "BiLSTM"}:
-    sweep_configuration |= {
-        'activation': {'value': 'relu'},
-        'l2': {'value': 4e-6},
+    # STATIC config
+    static_config = {
+        'rho': 0.9,
+        'epsilon': 1e-08,
+        'decay': 0.0,
+        'validation_split': 0.02,
+        'activation': 'relu',
+        'l2': 4e-6,
+        'gru_units': 64,
+        'lstm_units': 64
     }
-if model_name == "BiGRU":
-    sweep_configuration['gru_units'] = {'values': [64, 128, 256]}
-if model_name == "BiLSTM":
-    sweep_configuration['lstm_units'] = {'values': [64, 128, 256]}
 
-sweep_id = wandb.sweep(
-    sweep_configuration,
-    project = 'job-status-prediction'
-)
+    # if model_name in {"SumEmbeddings", "AvgEmbeddings", "BiGRU", "BiLSTM"}:
+    #     sweep_configuration.update({
+    #         'rho': {'value': 0.9},
+    #         'epsilon': {'value': 1e-08},
+    #         'decay': {'value': 0.0},
+    #         'validation_split': {'value': 0.02},
+    #     })
+    # if model_name in {"BiGRU", "BiLSTM"}:
+    #     sweep_configuration.update({
+    #         'activation': {'value': 'relu'},
+    #         'l2': {'value': 4e-6},
+    #     })
+    # if model_name == "BiGRU":
+    #     sweep_configuration['gru_units'] = {'values': [64, 128, 256]}
+    # if model_name == "BiLSTM":
+    #     sweep_configuration['lstm_units'] = {'values': [64, 128, 256]}
+
+    sweep_id = wandb.sweep(
+        sweep_configuration,
+        project = 'job-status-prediction'
+    )
 
 def main(config = None):
         
-        with wandb.init(config = config):
+        # warm up the nextwork
+        logistic_regression_train(train_data)
         
-            # warm up the nextwork
-            logistic_regression_train(train_data)
+        if argObj.wandb: 
+            with wandb.init(config = config):
+            
+
+                # TRAIN
+                if model_name == "SumEmbeddings":
+                    SE_model_train(train_data, wandb, static_config)
+                elif model_name == "AvgEmbeddings":
+                    AE_model_train(train_data, wandb, static_config)
+                elif model_name == "BiGRU":
+                    BG_model_train(train_data, wandb, static_config)
+                elif model_name == "BiLSTM":
+                    BL_model_train(train_data, wandb, static_config)
+                elif model_name == "BERT":
+                    BERT_model_train(train_data, wandb, static_config)
+
+
+                # EVALUATE
+                if model_name == "SumEmbeddings":
+                    SE_model_test(train_data, wandb, static_config)
+                elif model_name == "AvgEmbeddings":
+                    AE_model_test(train_data, wandb, static_config)
+                elif model_name == "BiGRU":
+                    BG_model_test(train_data, wandb, static_config)
+                elif model_name == "BiLSTM":
+                    BL_model_test(train_data, wandb, static_config)
+                elif model_name == "BERT":
+                    BERT_model_test(train_data, wandb, static_config)
+                    
+        else:
 
             # TRAIN
             if model_name == "SumEmbeddings":
-                SE_model_train(train_data, wandb)
+                SE_model_train(train_data)
             elif model_name == "AvgEmbeddings":
-                AE_model_train(train_data, wandb)
+                AE_model_train(train_data)
             elif model_name == "BiGRU":
-                BG_model_train(train_data, wandb)
+                BG_model_train(train_data)
             elif model_name == "BiLSTM":
-                BL_model_train(train_data, wandb)
+                BL_model_train(train_data)
             elif model_name == "BERT":
-                BERT_model_train(train_data, wandb)
+                BERT_model_train(train_data)
 
 
             # EVALUATE
             if model_name == "SumEmbeddings":
-                SE_model_test(test_data, wandb)
+                SE_model_test(train_data)
             elif model_name == "AvgEmbeddings":
-                AE_model_test(test_data, wandb)
+                AE_model_test(train_data)
             elif model_name == "BiGRU":
-                BG_model_test(test_data, wandb)
+                BG_model_test(train_data)
             elif model_name == "BiLSTM":
-                BL_model_test(test_data, wandb)
+                BL_model_test(train_data)
             elif model_name == "BERT":
-                BERT_model_test(test_data, wandb)
+                BERT_model_test(train_data)
                 
-wandb.agent(sweep_id, function = main, count = 25)
+if argObj.wandb:
+    wandb.agent(sweep_id, function = main, count = 25)
+else:
+    main()

@@ -12,20 +12,23 @@ from deep_model.SumEmbeddings.parameters import *
 from utils.plot import plot
 
 # Trains the SumEmbedding model using the data passed as argument
-def SE_model_train(data, wandb):
+def SE_model_train(data, wandb=None, static_config=None):
     
-    # overwrite parameters with wandb
-    EMBED_HIDDEN_SIZE =  wandb.config.embedding_size
-    MAX_SEQ_LEN = wandb.config.seq_length
-    ACTIVATION = wandb.config.activation
-    DROPOUT = wandb.config.dropout
-    LEARNING_RATE = wandb.config.learning_rate
-    RHO = wandb.config.rho
-    EPSILON = wandb.config.epsilon
-    DECAY = wandb.config.decay
-    BATCH_SIZE = wandb.config.batch_size
-    TRAINING_EPOCHS = wandb.config.num_epochs
-    VALIDATION_SPLIT = wandb.config.validation_split
+    from deep_model.SumEmbeddings.parameters import EMBED_HIDDEN_SIZE, MAX_SEQ_LEN, ACTIVATION, DROPOUT, LEARNING_RATE, RHO, EPSILON, DECAY, BATCH_SIZE, TRAINING_EPOCHS, VALIDATION_SPLIT
+    
+    if wandb is not None and static_config is not None:
+        # overwrite parameters with wandb
+        EMBED_HIDDEN_SIZE =  wandb.config.embedding_size
+        MAX_SEQ_LEN = wandb.config.seq_length
+        ACTIVATION = static_config['activation']
+        DROPOUT = wandb.config.dropout
+        LEARNING_RATE = wandb.config.learning_rate
+        RHO = static_config['rho']
+        EPSILON = static_config['epsilon']
+        DECAY = static_config['decay']
+        BATCH_SIZE = wandb.config.batch_size
+        TRAINING_EPOCHS = wandb.config.num_epochs
+        VALIDATION_SPLIT = static_config['validation_split']
     
     # Preprocess the data and obtain the embedding weight matrix
     train_data, embed_matrix = preprocess_traindata(data)
