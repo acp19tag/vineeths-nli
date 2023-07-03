@@ -1,7 +1,7 @@
 # Imports
 import tempfile
 from tensorflow.keras.models import Model
-from tensorflow.keras.optimizers.legacy import RMSprop
+from tensorflow.keras.optimizers import RMSprop
 from tensorflow.keras.regularizers import l2
 from tensorflow.keras.layers import Input, Embedding, Dense, Dropout, TimeDistributed
 from tensorflow.keras.layers import BatchNormalization, Bidirectional, LSTM, concatenate
@@ -95,7 +95,8 @@ def BL_model_train(data, wandb=None, static_config=None):
     model = Model(inputs=[premise, hypothesis], outputs=prediction)
 
     # Choosing an optimizer
-    optimizer = RMSprop(lr=LEARNING_RATE, rho=RHO, epsilon=EPSILON, decay=DECAY)
+    # optimizer = RMSprop(lr=LEARNING_RATE, rho=RHO, epsilon=EPSILON, decay=DECAY)
+    optimizer = RMSprop(learning_rate=LEARNING_RATE, rho=RHO, epsilon=EPSILON, weight_decay=DECAY)
 
     # Compile the model and print out the model summary
     model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy'])

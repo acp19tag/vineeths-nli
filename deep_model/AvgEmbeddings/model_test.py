@@ -57,16 +57,17 @@ def AE_model_test(data, wandb):
                 output_file.write("entailment\n")
                 output_file_root.write("entailment\n")
 
-    # Uncomment for generating plots.
-    confusion_mtx = confusion_matrix(Y_test, Y_pred)
-    plot_confusion_matrix(confusion_mtx, "AvgEmbeddings", classes=range(3))
+    # # Uncomment for generating plots.
+    # confusion_mtx = confusion_matrix(Y_test, Y_pred)
+    # plot_confusion_matrix(confusion_mtx, "AvgEmbeddings", classes=range(2))
 
     target_names = [f"Class {i}" for i in range(CATEGORIES)]
     classification_rep = classification_report(Y_test, Y_pred, target_names=target_names, output_dict=True)
+    wandb.log(classification_rep)
 
-    plt.figure()
-    sns.heatmap(pd.DataFrame(classification_rep).iloc[:-1, :].T, annot=True)
-    plt.savefig('./results/AvgEmbeddings/classification_report.png')
-    # plt.show()
-    plot_model(model, to_file='./results/AvgEmbeddings/model_plot.png', show_shapes=True, show_layer_names=True)
+    # plt.figure()
+    # sns.heatmap(pd.DataFrame(classification_rep).iloc[:-1, :].T, annot=True)
+    # plt.savefig('./results/AvgEmbeddings/classification_report.png')
+    # # plt.show()
+    # plot_model(model, to_file='./results/AvgEmbeddings/model_plot.png', show_shapes=True, show_layer_names=True)
     

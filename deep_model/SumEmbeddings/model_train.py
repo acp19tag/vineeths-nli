@@ -93,7 +93,8 @@ def SE_model_train(data, wandb=None, static_config=None):
     model = Model(inputs=[premise, hypothesis], outputs=prediction)
 
     # Choosing an optimizer
-    optimizer = RMSprop(lr=LEARNING_RATE, rho=RHO, epsilon=EPSILON, decay=DECAY)
+    # optimizer = RMSprop(lr=LEARNING_RATE, rho=RHO, epsilon=EPSILON, decay=DECAY)
+    optimizer = RMSprop(learning_rate=LEARNING_RATE, rho=RHO, epsilon=EPSILON, weight_decay=DECAY)
 
     # Compile the model and print out the model summary
     model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy'])

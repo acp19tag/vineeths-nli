@@ -1,3 +1,7 @@
+"""
+BROKEN - requires fixing
+"""
+
 # Imports
 import numpy as np
 from transformers import *
@@ -20,7 +24,7 @@ from tensorflow.keras.utils import plot_model
 
 
 # Tests the BERT model using the data passed as argument
-def BERT_model_test(data):
+def BERT_model_test(data, wandb):
     test_data = preprocess(data)
 
     # Download/Initialize BERT tokenizer
@@ -53,16 +57,17 @@ def BERT_model_test(data):
             elif Y_pred[ind] == 2:
                 output_file.write("entailment\n")
     
-    # Uncomment for generating plots.
-    confusion_mtx = confusion_matrix(Y_test, Y_pred)
-    plot_confusion_matrix(confusion_mtx, "BERT", classes=range(3))
+    # # Uncomment for generating plots.
+    # confusion_mtx = confusion_matrix(Y_test, Y_pred)
+    # plot_confusion_matrix(confusion_mtx, "BERT", classes=range(2))
 
     target_names = ["Class {}".format(i) for i in range(CATEGORIES)]
     classification_rep = classification_report(Y_test, Y_pred, target_names=target_names, output_dict=True)
+    wandb.log(classification_rep)
 
-    plt.figure()
-    sns.heatmap(pd.DataFrame(classification_rep).iloc[:-1, :].T, annot=True)
-    plt.savefig('./results/BERT/classification_report.png')
-    # plt.show()
-    plot_model(model, to_file='./results/BERT/model_plot.png', show_shapes=True, show_layer_names=True)
+    # plt.figure()
+    # sns.heatmap(pd.DataFrame(classification_rep).iloc[:-1, :].T, annot=True)
+    # plt.savefig('./results/BERT/classification_report.png')
+    # # plt.show()
+    # plot_model(model, to_file='./results/BERT/model_plot.png', show_shapes=True, show_layer_names=True)
     
