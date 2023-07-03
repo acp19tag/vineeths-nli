@@ -56,16 +56,26 @@ if argObj.wandb:
         'parameters':
             {
                 'batch_size': {
-                    'values': [128, 256, 512]
+                    'values': [184, 256, 328]
+                    # 'distribution': 'q_log_uniform_values',
+                    # 'q': 8,
+                    # 'min': 32,
+                    # 'max': 1024,
                     },
                 'seq_length': {
-                    'values': [128, 256, 512]
+                    # 'values': [128, 256, 512]
+                    'value': 128
                     },
                 'learning_rate': {
-                    'values': [1e-4, 1e-5, 1e-6]
+                    'values': [1e-3, 1e-4, 1e-5]
+                    # 'value': 1e-3
                     },
                 'dropout': {
-                    'values': [0.0, 0.1, 0.2, 0.3, 0.4]
+                    'values': [0.3, 0.5, 0.7]
+                    # 'distribution': 'uniform',
+                    # 'min': 0.0,
+                    # 'max': 0.8,
+                    # 'value': 0.3
                     },
                 'num_epochs': {'value': 200},
                 'embedding_size': {'value': 300},
@@ -108,14 +118,13 @@ if argObj.wandb:
         project = 'job-status-prediction'
     )
 
+# warm up the nextwork
+logistic_regression_train(train_data)
+
 def main(config = None):
-        
-        # warm up the nextwork
-        logistic_regression_train(train_data)
         
         if argObj.wandb: 
             with wandb.init(config = config):
-            
 
                 # TRAIN
                 if model_name == "SumEmbeddings":
@@ -129,18 +138,17 @@ def main(config = None):
                 elif model_name == "BERT":
                     BERT_model_train(train_data, wandb, static_config)
 
-
                 # EVALUATE
                 if model_name == "SumEmbeddings":
-                    SE_model_test(train_data, wandb, static_config)
+                    SE_model_test(test_data, wandb)
                 elif model_name == "AvgEmbeddings":
-                    AE_model_test(train_data, wandb, static_config)
+                    AE_model_test(test_data, wandb)
                 elif model_name == "BiGRU":
-                    BG_model_test(train_data, wandb, static_config)
+                    BG_model_test(test_data, wandb)
                 elif model_name == "BiLSTM":
-                    BL_model_test(train_data, wandb, static_config)
+                    BL_model_test(test_data, wandb)
                 elif model_name == "BERT":
-                    BERT_model_test(train_data, wandb, static_config)
+                    BERT_model_test(test_data, wandb)
                     
         else:
 
@@ -159,17 +167,17 @@ def main(config = None):
 
             # EVALUATE
             if model_name == "SumEmbeddings":
-                SE_model_test(train_data)
+                SE_model_test(test_data)
             elif model_name == "AvgEmbeddings":
-                AE_model_test(train_data)
+                AE_model_test(test_data)
             elif model_name == "BiGRU":
-                BG_model_test(train_data)
+                BG_model_test(test_data)
             elif model_name == "BiLSTM":
-                BL_model_test(train_data)
+                BL_model_test(test_data)
             elif model_name == "BERT":
-                BERT_model_test(train_data)
+                BERT_model_test(test_data)
                 
 if argObj.wandb:
-    wandb.agent(sweep_id, function = main, count = 25)
+    wandb.agent(sweep_id, function = main, count = 6)
 else:
     main()
